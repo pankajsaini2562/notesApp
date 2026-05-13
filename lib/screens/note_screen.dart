@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notes_app/models/note.dart';
+import 'package:notes_app/providers/theme_provider.dart';
 import '../providers/note_provider.dart';
 
 class NoteScreen extends ConsumerStatefulWidget {
@@ -17,9 +18,62 @@ class _NoteScreenState extends ConsumerState<NoteScreen> {
   Widget build(BuildContext context) {
     final notes = ref.watch(noteProvider);
     return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Notes App',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 24,
+            letterSpacing: 1.2,
+          ),
+        ),
+        centerTitle: true, // Centers the title
+        elevation: 4, // Adds shadow
+        backgroundColor: Colors.grey, // Custom color
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(20), // Rounded bottom corners
+          ),
+        ),
+
+        actions: [
+          IconButton(
+            icon: Icon(
+              ref.watch(themeProvider) == ThemeMode.dark
+                  ? Icons.light_mode
+                  : Icons.dark_mode,
+              color: Colors.white,
+            ),
+            tooltip: 'Toggle Theme',
+            onPressed: () {
+              final isDark =
+                  ref.read(themeProvider.notifier).state == ThemeMode.dark;
+              ref.read(themeProvider.notifier).state = isDark
+                  ? ThemeMode.light
+                  : ThemeMode.dark;
+            },
+          ),
+        ],
+        // actions: [
+        //   IconButton(
+        //     icon: const Icon(Icons.search),
+        //     tooltip: 'Search Notes',
+        //     onPressed: () {
+        //       // Implement search functionality here
+        //     },
+        //   ),
+        //   IconButton(
+        //     icon: const Icon(Icons.delete_forever),
+        //     tooltip: 'Clear All Notes',
+        //     onPressed: () {
+        //       // Implement clear all notes functionality here
+        //     },
+        //   ),
+        // ],
+      ),
       body: Column(
         children: [
-          const SizedBox(height: 17),
+          const SizedBox(height: 25),
           Container(
             padding: const EdgeInsets.all(5),
             child: Row(
@@ -72,6 +126,8 @@ class _NoteScreenState extends ConsumerState<NoteScreen> {
               ],
             ),
           ),
+
+          const SizedBox(height: 22),
 
           Expanded(
             child: ListView.builder(
